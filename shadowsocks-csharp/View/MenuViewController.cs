@@ -418,6 +418,9 @@ namespace Shadowsocks.View
             serverItems.Clear();
             int strategyCount = i;
             Configuration configuration = controller.GetConfigurationCopy();
+            if(configuration.hotkey.AllowSwitchServer) {
+                HotKey.unregisterAll();
+            }
             foreach (var server in configuration.configs)
             {
                 MenuItem item = new MenuItem(server.FriendlyName());
@@ -426,6 +429,9 @@ namespace Shadowsocks.View
                 items.Add(i, item);
                 serverItems.Add(item);
                 i++;
+            }
+            if(configuration.hotkey.AllowSwitchServer) {
+                RegisterHotKey();
             }
 
             foreach (MenuItem item in items)
