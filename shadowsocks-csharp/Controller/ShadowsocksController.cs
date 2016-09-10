@@ -356,6 +356,11 @@ namespace Shadowsocks.Controller
             Configuration.Save(_config);
         }
 
+        public void SaveHotkeyConfig(HotkeyConfig newConfig) {
+            _config.hotkey = newConfig;
+            Configuration.Save(_config);
+        }
+
         public void UpdateLatency(Server server, TimeSpan latency)
         {
             if (_config.availabilityStatistics)

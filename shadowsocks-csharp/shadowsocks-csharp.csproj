@@ -139,6 +139,11 @@
     <Compile Include="3rd\zxing\ResultPoint.cs" />
     <Compile Include="3rd\zxing\ResultPointCallback.cs" />
     <Compile Include="3rd\zxing\WriterException.cs" />
+    <Compile Include="Controller\HotKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controller\NativeMethods.cs" />
+    <Compile Include="Model\HotkeyConfig.cs" />
     <Compile Include="Proxy\DirectConnect.cs" />
     <Compile Include="Proxy\IProxy.cs" />
     <Compile Include="Controller\Service\AvailabilityStatistics.cs" />

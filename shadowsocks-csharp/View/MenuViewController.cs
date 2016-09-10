@@ -13,6 +13,7 @@ using Shadowsocks.Controller;
 using Shadowsocks.Model;
 using Shadowsocks.Properties;
 using Shadowsocks.Util;
+using static Shadowsocks.Controller.NativeMethods;
 
 namespace Shadowsocks.View
 {
@@ -100,6 +101,9 @@ namespace Shadowsocks.View
                 _isStartupChecking = true;
                 updateChecker.CheckUpdate(config, 3000);
             }
+
+            //Regist Hotkey
+            RegisterHotKey();
         }
 
         private void controller_TrafficChanged(object sender, EventArgs e)
@@ -823,7 +827,73 @@ namespace Shadowsocks.View
         }
 
         private void ShowHotkeySettingItem_Click(object sender, EventArgs e) {
-            new HotkeySetting().Show();
+            HotKey.unregister("SwitchSystemProxy");
+            HotKey.unregister("ChangeToPac");
+            HotKey.unregister("ChangeToGlobal");
+            HotKey.unregister("SwitchAllowLan");
+            HotKey.unregister("ShowLogs");
+            HotkeySetting hs = new HotkeySetting(controller);
+            hs.FormClosed += (object @object, FormClosedEventArgs @FormClosedEventArgs) => {
+                RegisterHotKey();
+            };
+            hs.Show();
+        }
+
+        /// <summary>
+        /// 注册热键
+        /// </summary>
+        private void RegisterHotKey() {
+            HotkeyConfig conf = controller.GetConfigurationCopy().hotkey;
+            bool result = true;
+            result = result && RegisterHotKey("SwitchSystemProxy", conf.SwitchSystemProxy, this.EnableItem_Click);
+            result = result && RegisterHotKey("ChangeToPac", conf.ChangeToPac, this.PACModeItem_Click);
+            result = result && RegisterHotKey("ChangeToGlobal", conf.ChangeToGlobal, this.GlobalModeItem_Click);
+            result = result && RegisterHotKey("SwitchAllowLan", conf.SwitchAllowLan, this.ShareOverLANItem_Click);
+            result = result && RegisterHotKey("ShowLogs", conf.ShowLogs, this.ShowLogItem_Click);
+            if(!result) {
+                MessageBox.Show(I18N.GetString("Hotkey Register Faild!"));
+            }
+        }
+
+        /// <summary>
+        /// 注册热键
+        /// </summary>
+        private bool RegisterHotKey(string name, string value, EventHandler e) {
+            if(value != "") {
+                return HotKey.register(name, getModifier(value), getKey(value), e);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 获取组合键
+        /// </summary>
+        /// <param name="hotkey">热键字符串</param>
+        /// <returns>组合键信息</returns>
+        private KeyModifiers getModifier(string hotkey) {
+            KeyModifiers km = 0;
+            if(hotkey != "") {
+                if(hotkey.IndexOf("Ctrl") >= 0) {
+                    km |= KeyModifiers.Ctrl;
+                }
+                if(hotkey.IndexOf("Alt") >= 0) {
+                    km |= KeyModifiers.Alt;
+                }
+                if(hotkey.IndexOf("Shift") >= 0) {
+                    km |= KeyModifiers.Shift;
+                }
+            }
+            return km;
+        }
+
+        /// <summary>
+        /// 取热键代码
+        /// </summary>
+        /// <param name="hotkey">热键字符串</param>
+        /// <returns>热键按键</returns>
+        private Keys getKey(string hotkey) {
+            string[] key = hotkey.TrimEnd().Split(' ', '+');
+            return (Keys)Enum.Parse(typeof(Keys), key[key.Length - 1]);
         }
     }
 }

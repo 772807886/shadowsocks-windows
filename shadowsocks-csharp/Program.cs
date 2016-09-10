@@ -56,9 +56,13 @@ namespace Shadowsocks
 #else
                 Logging.OpenLogFile();
 #endif
+                HotKey.initialize();  //初始化热键
                 ShadowsocksController controller = new ShadowsocksController();
                 MenuViewController viewController = new MenuViewController(controller);
                 controller.Start();
+                Application.ApplicationExit += (object s, EventArgs e) => {
+                    HotKey.final();  //程序退出时注销热键
+                };
                 Application.Run();
             }
         }

@@ -1,12 +1,19 @@
 ﻿using Shadowsocks.Controller;
+using Shadowsocks.Model;
+using Shadowsocks.Properties;
 using System;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
 namespace Shadowsocks.View {
     public partial class HotkeySetting : Form {
-        public HotkeySetting() {
+        ShadowsocksController controller;
+
+        public HotkeySetting(ShadowsocksController controller) {
+            this.controller = controller;
             InitializeComponent();
+            Icon = Icon.FromHandle(Resources.ssw128.GetHicon());
         }
 
         /// <summary>
@@ -14,6 +21,18 @@ namespace Shadowsocks.View {
         /// </summary>
         private void HotkeySetting_Load(object sender, EventArgs e) {
             I18n();
+
+            //Load Config
+            HotkeyConfig conf = controller.GetConfigurationCopy().hotkey;
+            if(conf == null) {
+                conf = new HotkeyConfig();
+            }
+            textBox1.Text = conf.SwitchSystemProxy;
+            textBox2.Text = conf.ChangeToPac;
+            textBox3.Text = conf.ChangeToGlobal;
+            textBox4.Text = conf.SwitchAllowLan;
+            textBox5.Text = conf.ShowLogs;
+            checkBox1.Checked = conf.AllowSwitchServer;
         }
 
         /// <summary>
@@ -75,11 +94,31 @@ namespace Shadowsocks.View {
             }
         }
 
+        /// <summary>
+        /// 取消按钮
+        /// </summary>
         private void cancel_Click(object sender, EventArgs e) {
             this.Close();
         }
 
+        /// <summary>
+        /// 确定按钮
+        /// </summary>
         private void ok_Click(object sender, EventArgs e) {
+            //Save Config
+            HotkeyConfig conf = controller.GetConfigurationCopy().hotkey;
+            if(conf == null) {
+                conf = new HotkeyConfig();
+            }
+            conf.SwitchSystemProxy = textBox1.Text;
+            conf.ChangeToPac = textBox2.Text;
+            conf.ChangeToGlobal = textBox3.Text;
+            conf.SwitchAllowLan = textBox4.Text;
+            conf.ShowLogs = textBox5.Text;
+            conf.AllowSwitchServer = checkBox1.Checked;
+            controller.SaveHotkeyConfig(conf);
+
+            this.Close();
         }
     }
 }
