@@ -56,6 +56,7 @@ namespace Shadowsocks.View
         private List<LogForm> logForms = new List<LogForm>();
         private bool logFormsVisible = false;
         private string _urlToOpen;
+        private List<MenuItem> serverItems = new List<MenuItem>();
 
         public MenuViewController(ShadowsocksController controller)
         {
@@ -414,6 +415,7 @@ namespace Shadowsocks.View
             // user want a seperator item between strategy and servers menugroup
             items.Add( i++, new MenuItem("-") );
 
+            serverItems.Clear();
             int strategyCount = i;
             Configuration configuration = controller.GetConfigurationCopy();
             foreach (var server in configuration.configs)
@@ -422,6 +424,7 @@ namespace Shadowsocks.View
                 item.Tag = i - strategyCount;
                 item.Click += AServerItem_Click;
                 items.Add(i, item);
+                serverItems.Add(item);
                 i++;
             }
 
@@ -827,11 +830,7 @@ namespace Shadowsocks.View
         }
 
         private void ShowHotkeySettingItem_Click(object sender, EventArgs e) {
-            HotKey.unregister("SwitchSystemProxy");
-            HotKey.unregister("ChangeToPac");
-            HotKey.unregister("ChangeToGlobal");
-            HotKey.unregister("SwitchAllowLan");
-            HotKey.unregister("ShowLogs");
+            HotKey.unregisterAll();
             HotkeySetting hs = new HotkeySetting(controller);
             hs.FormClosed += (object @object, FormClosedEventArgs @FormClosedEventArgs) => {
                 RegisterHotKey();
@@ -850,6 +849,15 @@ namespace Shadowsocks.View
             result = result && RegisterHotKey("ChangeToGlobal", conf.ChangeToGlobal, this.GlobalModeItem_Click);
             result = result && RegisterHotKey("SwitchAllowLan", conf.SwitchAllowLan, this.ShareOverLANItem_Click);
             result = result && RegisterHotKey("ShowLogs", conf.ShowLogs, this.ShowLogItem_Click);
+            for(int i = 0; conf.AllowSwitchServer && i < 9 && i < serverItems.Count; i++) {
+                EventHandler handler = (object sender, EventArgs e) => {
+                    string name = (e as HotKey.HotKeyEventArgs).Message;
+                    int index = int.Parse(name.Substring(name.Length - 1));
+                    AServerItem_Click(serverItems[index], null);
+                };
+                result = result && RegisterHotKey("SwitchServerD" + i, "Ctrl + Alt + Shift + D" + (i + 1), handler);
+                result = result && RegisterHotKey("SwitchServerNumPad" + i, "Ctrl + Alt + Shift + NumPad" + (i + 1), handler);
+            }
             if(!result) {
                 MessageBox.Show(I18N.GetString("Hotkey Register Faild!"));
             }

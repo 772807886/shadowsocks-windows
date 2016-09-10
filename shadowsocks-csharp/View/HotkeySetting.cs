@@ -75,7 +75,9 @@ namespace Shadowsocks.View {
                     (e.KeyValue >= 112 && e.KeyValue <= 123)) {
                     sb.Append(e.KeyCode);
                 } else if(e.KeyValue >= 48 && e.KeyValue <= 57) {
-                    sb.Append(e.KeyValue);
+                    sb.Append('D').Append((char)e.KeyValue);
+                } else if(e.KeyValue >= 96 && e.KeyValue <= 105) {
+                    sb.Append("NumPad").Append((char)(e.KeyValue - 48));
                 }
             }
             ((TextBox)sender).Text = sb.ToString();

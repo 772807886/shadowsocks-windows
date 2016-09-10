@@ -27,6 +27,21 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
+        /// 热键事件数据
+        /// </summary>
+        public class HotKeyEventArgs : EventArgs {
+            private string name;
+            public HotKeyEventArgs(string name) {
+                this.name = name;
+            }
+            public string Message {
+                get {
+                    return name;
+                }
+            }
+        }
+
+        /// <summary>
         /// 初始化
         /// </summary>
         public static void initialize() {
@@ -35,9 +50,7 @@ namespace Shadowsocks.Controller {
         }
 
         public static void final() {
-            while(hotkeys.Count > 0) {
-                unregister(hotkeys[0].name);
-            }
+            unregisterAll();
             form.Close();
         }
 
@@ -74,6 +87,15 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
+        /// 注销所有热键
+        /// </summary>
+        public static void unregisterAll() {
+            while(hotkeys.Count > 0) {
+                unregister(hotkeys[0].name);
+            }
+        }
+
+        /// <summary>
         /// 消息处理函数
         /// </summary>
         /// <param name="m">消息</param>
@@ -83,7 +105,7 @@ namespace Shadowsocks.Controller {
                 int id = m.WParam.ToInt32();
                 foreach(Hotkeys hk in hotkeys) {
                     if(hk.id == id) {
-                        hk.e.Invoke(form, null);
+                        hk.e.Invoke(form, new HotKeyEventArgs(hk.name));
                     }
                 }
                 break;
