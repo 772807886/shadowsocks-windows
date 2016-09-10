@@ -70,13 +70,14 @@ namespace Shadowsocks.View {
                 if(e.Shift) {
                     sb.Append("Shift + ");
                 }
-                if((e.KeyValue >= 33 && e.KeyValue <= 40) ||
-                    (e.KeyValue >= 65 && e.KeyValue <= 90) ||
-                    (e.KeyValue >= 112 && e.KeyValue <= 123)) {
+                Keys keyvalue = (Keys)e.KeyValue;
+                if((keyvalue >= Keys.PageUp && keyvalue <= Keys.Down) ||
+                    (keyvalue >= Keys.A && keyvalue <= Keys.Z) ||
+                    (keyvalue >= Keys.F1 && keyvalue <= Keys.F12)) {
                     sb.Append(e.KeyCode);
-                } else if(e.KeyValue >= 48 && e.KeyValue <= 57) {
+                } else if(keyvalue >= Keys.D0 && keyvalue <= Keys.D9) {
                     sb.Append('D').Append((char)e.KeyValue);
-                } else if(e.KeyValue >= 96 && e.KeyValue <= 105) {
+                } else if(keyvalue >= Keys.NumPad0 && keyvalue <= Keys.NumPad9) {
                     sb.Append("NumPad").Append((char)(e.KeyValue - 48));
                 }
             }
