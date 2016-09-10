@@ -271,6 +271,7 @@ namespace Shadowsocks.View
                 new MenuItem("-"),
                 CreateMenuItem("Show Logs...", new EventHandler(this.ShowLogItem_Click)),
                 this.VerboseLoggingToggleItem = CreateMenuItem( "Verbose Logging", new EventHandler(this.VerboseLoggingToggleItem_Click) ),
+                CreateMenuItem("HotkeySetting...", new EventHandler(this.ShowHotkeySettingItem_Click)),
                 CreateMenuGroup("Updates...", new MenuItem[] {
                     CreateMenuItem("Check for Updates...", new EventHandler(this.checkUpdatesItem_Click)),
                     new MenuItem("-"),
@@ -819,6 +820,10 @@ namespace Shadowsocks.View
         private void proxyItem_Click(object sender, EventArgs e)
         {
             ShowProxyForm();
+        }
+
+        private void ShowHotkeySettingItem_Click(object sender, EventArgs e) {
+            new HotkeySetting().Show();
         }
     }
 }
