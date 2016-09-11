@@ -5,21 +5,21 @@ using System.Windows.Forms;
 namespace Shadowsocks.Controller {
     public static class NativeMethods {
         /// <summary>
-        /// 注册热键
+        /// Register hotkey
         /// </summary>
-        /// <param name="hWnd">窗口句柄</param>
-        /// <param name="id">热键ID（不能与其它ID重复）</param>
-        /// <param name="fsModifiers">标识热键是否在按Alt、Ctrl、Shift、Windows等键时才会生效</param>
-        /// <param name="vk">热键的内容</param>
+        /// <param name="hWnd">Handle</param>
+        /// <param name="id">Hotkey ID, make sure it is the only</param>
+        /// <param name="fsModifiers">Identify whether hotkeys only when you press Alt, Ctrl, Shift, Windows key take effect</param>
+        /// <param name="vk">Main key</param>
         /// <returns></returns>
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifiers fsModifiers, Keys vk);
 
         /// <summary>
-        /// 注销热键
+        /// Unregister hotkey
         /// </summary>
-        /// <param name="hWnd">窗口句柄</param>
-        /// <param name="id">热键ID</param>
+        /// <param name="hWnd">Handle</param>
+        /// <param name="id">Hotkey ID</param>
         /// <returns></returns>
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);

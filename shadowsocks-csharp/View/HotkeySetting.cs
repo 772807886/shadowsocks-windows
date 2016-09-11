@@ -15,10 +15,7 @@ namespace Shadowsocks.View {
             InitializeComponent();
             Icon = Icon.FromHandle(Resources.ssw128.GetHicon());
         }
-
-        /// <summary>
-        /// 初始化加载窗体
-        /// </summary>
+        
         private void HotkeySetting_Load(object sender, EventArgs e) {
             I18n();
 
@@ -34,10 +31,7 @@ namespace Shadowsocks.View {
             textBox5.Text = conf.ShowLogs;
             checkBox1.Checked = conf.AllowSwitchServer;
         }
-
-        /// <summary>
-        /// 窗口文本Internationalization
-        /// </summary>
+        
         private void I18n() {
             Text = I18N.GetString(Text);
             label1.Text = I18N.GetString(label1.Text);
@@ -53,13 +47,11 @@ namespace Shadowsocks.View {
         private StringBuilder sb = new StringBuilder();
 
         /// <summary>
-        /// 快捷键捕获 - 按下键盘
+        /// Capture hotkey - Press key
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e">键</param>
         private void HotkeyDown(object sender, KeyEventArgs e) {
             sb.Length = 0;
-            //仅允许组合键
+            //Combination key only
             if(e.Modifiers != 0) {
                 if(e.Control) {
                     sb.Append("Ctrl + ");
@@ -85,10 +77,8 @@ namespace Shadowsocks.View {
         }
 
         /// <summary>
-        /// 快捷键捕获 - 松开键盘
+        /// Capture hotkey - Release key
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e">键</param>
         private void HotkeyUp(object sender, KeyEventArgs e) {
             TextBox tb = sender as TextBox;
             string content = tb.Text.TrimEnd();
@@ -96,17 +86,11 @@ namespace Shadowsocks.View {
                 tb.Text = "";
             }
         }
-
-        /// <summary>
-        /// 取消按钮
-        /// </summary>
+        
         private void cancel_Click(object sender, EventArgs e) {
             this.Close();
         }
-
-        /// <summary>
-        /// 确定按钮
-        /// </summary>
+        
         private void ok_Click(object sender, EventArgs e) {
             //Save Config
             HotkeyConfig conf = controller.GetConfigurationCopy().hotkey;

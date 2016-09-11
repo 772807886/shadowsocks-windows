@@ -5,20 +5,20 @@ using System.Windows.Forms;
 namespace Shadowsocks.Controller {
     public class HotKey : Form {
         /// <summary>
-        /// 接受热键的窗体
+        /// The Form to receive hotkey message
         /// </summary>
         private static HotKey form;
         /// <summary>
-        /// 热键ID
+        /// Hotkey id
         /// </summary>
         private static int id = 1;
         /// <summary>
-        /// 已注册的热键
+        /// Registered hotkey
         /// </summary>
         private static List<Hotkeys> hotkeys = new List<Hotkeys>();
 
         /// <summary>
-        /// 热键信息
+        /// Hotkey info
         /// </summary>
         struct Hotkeys {
             public int id;
@@ -27,7 +27,7 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 热键事件数据
+        /// Hotkey Event Arguments
         /// </summary>
         public class HotKeyEventArgs : EventArgs {
             private string name;
@@ -42,7 +42,7 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 初始化
+        /// Initialize
         /// </summary>
         public static void initialize() {
             form = new HotKey();
@@ -55,12 +55,12 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 注册热键
+        /// Register hotkey
         /// </summary>
-        /// <param name="name">名称</param>
-        /// <param name="modifier">组合键</param>
-        /// <param name="key">热键</param>
-        /// <param name="handler">处理函数</param>
+        /// <param name="name">name of hotkey to register</param>
+        /// <param name="modifier">modifier</param>
+        /// <param name="key">main key</param>
+        /// <param name="handler">callback</param>
         public static bool register(string name, NativeMethods.KeyModifiers modifier, Keys key, EventHandler handler) {
             if(NativeMethods.RegisterHotKey(form.Handle, id, modifier, key)) {
                 hotkeys.Add(new Hotkeys { id = id++, name = name, e = handler });
@@ -70,9 +70,9 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 注销热键
+        /// Unregister hotkey
         /// </summary>
-        /// <param name="name">名称</param>
+        /// <param name="name">name of hotkey to unregister</param>
         public static bool unregister(string name) {
             for(int i = 0; i < hotkeys.Count; i++) {
                 if(hotkeys[i].name == name) {
@@ -87,7 +87,7 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 注销所有热键
+        /// Unregister all of hotkeys that had registered
         /// </summary>
         public static void unregisterAll() {
             while(hotkeys.Count > 0) {
@@ -96,9 +96,9 @@ namespace Shadowsocks.Controller {
         }
 
         /// <summary>
-        /// 消息处理函数
+        /// Message Process
         /// </summary>
-        /// <param name="m">消息</param>
+        /// <param name="m">Windows Message</param>
         protected override void WndProc(ref Message m) {
             switch(m.Msg) {
             case 0x0312:
